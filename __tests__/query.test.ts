@@ -31,16 +31,13 @@ describe('Query builder', () => {
     expect(query.url()).toEqual(expected);
   });
 
-  test('it throws an error if for() is not included', () => {
-    expect.assertions(1);
+  test('it does not add model if for() is not included', () => {
+    const query = new Query();
+    query.includes('toppings').url();
 
-    try {
-      const query = new Query();
+    const expected = '?include=toppings';
 
-      query.includes('toppings').url();
-    } catch (e) {
-      expect(e.message).toBe('Please call the for() method before adding filters or calling url() / get().');
-    }
+    expect(query.url()).toEqual(expected);
   });
 
   test('it builds a simple query with appends()', () => {

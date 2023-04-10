@@ -106,11 +106,11 @@ export default class Query {
   }
 
   private parseQuery(): string {
-    if (! this.model) {
-      throw new Error('Please call the for() method before adding filters or calling url() / get().');
+    if (this.model) {
+      return `/${this.model}${this.parser.parse()}`;
     }
 
-    return `/${this.model}${this.parser.parse()}`;
+    return `${this.parser.parse()}`;
   }
 
   /**
