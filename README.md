@@ -1,15 +1,12 @@
-# CogentJS
+# Resource Query Builder
 
 ## A beautiful and elegant way to build urls for your REST API
 
-<a href="https://www.npmjs.com/package/cogent-js">
-  <img src="https://img.shields.io/npm/v/cogent-js.svg" />
+<a href="https://www.npmjs.com/package/laravel-query-builder">
+  <img src="https://img.shields.io/npm/v/laravel-query-builder.svg" />
 </a> 
-<a href="https://travis-ci.org/joelwmale/cogent-js">
-  <img src="https://travis-ci.org/joelwmale/cogent-js.svg?branch=master" />
-</a>
-<a href="https://github.com/joelwmale/js-elegant-api-query/blob/master/LICENSE">
-  <img src="https://img.shields.io/apm/l/vim-mode.svg" />
+<a href="https://travis-ci.org/chrisidakwo/resource-query-builder">
+  <img src="https://travis-ci.org/chrisidakwo/resource-query-builder.svg?branch=master" />
 </a>
 
 This package helps you to quickly build urls for a REST API, using fluent syntax.
@@ -22,7 +19,7 @@ Make a url by calling the functions you need in a beautiful and elegant way:
 
 ```js
 // Import
-const { Query } = require("cogent-js");
+import Query from 'resource-query-builder';
 
 // If custom configuration is required, see the Additional Configuration section
 const query = new Query();
@@ -41,13 +38,13 @@ const url = query
 ## Npm
 
 ```js
-npm i cogent-js
+npm i resource-query-builder
 ```
 
 ## Yarn
 
 ```js
-yarn add cogent-js
+yarn add resource-query-builder
 ```
 
 # Additional Configuration
@@ -57,7 +54,7 @@ yarn add cogent-js
 You can optionally set the `base_url` property when instantiating the class to automatically preprend the url to all urls:
 
 ```js
-const { Query } = require('cogent-js');
+import Query from 'resource-query-builder';
 
 const query = new Query({
   base_url: 'http://api.example.com'
@@ -139,9 +136,10 @@ const url = query.for('users').params({ format: 'admin' }).url(); // or .get();
 If you need to change the default values for the query parameters, you can optionally pass in a configuration object when initializing your query object.
 
 ```js
-const { Query } = require("cogent-js");
+import Query from 'resource-query-builder';
 
 const query = new Query({
+  base_url: null,
   queryParameters: {
     include: 'include_custom',
     filters: 'filter_custom',
@@ -158,6 +156,8 @@ const query = new Query({
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-# Contact
+# Contributors
 
-Twitter [@joelwmale](https://twitter.com/joelwxd)
+This package is a Typescript implementation and extension of [cogent-js](https://github.com/joelwmale/cogent-js)
+
+[@chrisidakwo](https://twitter.com/chrisidakwo)

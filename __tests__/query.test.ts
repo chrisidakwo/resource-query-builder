@@ -12,7 +12,7 @@ describe('Query builder', () => {
     query
       .for('pizza')
       .includes('toppings')
-      .select('name');
+      .select(['name']);
 
     const expected = '/pizza?includes=toppings&select[pizza]=name';
 
@@ -21,7 +21,7 @@ describe('Query builder', () => {
 
   test('it can prepend an api url', () => {
     const query = new Query({
-      base_url: 'https://api.example.com'
+      base_url: 'https://api.example.com',
     });
 
     query.for('pizza').includes('toppings');
@@ -170,7 +170,7 @@ describe('Query builder', () => {
   test('it builds a simple query with select()', () => {
     const query = new Query();
 
-    query.for('pizza').select('name', 'date_added');
+    query.for('pizza').select(['name', 'date_added']);
 
     const expected = '/pizza?fields[pizza]=name,date_added';
 
@@ -183,25 +183,9 @@ describe('Query builder', () => {
     try {
       const query = new Query();
 
-      query.for('pizza').select();
+      query.for('pizza').select([]);
     } catch (e) {
-      expect(e.message).toBe('The fields() function takes a single argument of an array.');
-    }
-  });
-
-  test('it throws a config appropriate exception if no argument is passed into select()', () => {
-    expect.assertions(1);
-
-    try {
-      const query = new Query({
-        queryParameters: {
-          fields: 'select'
-        }
-      });
-
-      query.for('pizza').select();
-    } catch (e) {
-      expect(e.message).toBe('The select() function takes a single argument of an array.');
+      expect(e.message).toBe('The fields() function takes a single argument of a valid array.');
     }
   });
 
@@ -285,7 +269,7 @@ describe('Query builder', () => {
       .where('name', 'macaroni_and_cheese')
       .includes('toppings')
       .appends('full_name')
-      .select('name', 'ratings')
+      .select(['name', 'ratings'])
       .params({ format: 'basic' });
 
     const expected =

@@ -1,7 +1,35 @@
 import Parser from './Parser';
 
+export interface QueryConfigParameters {
+  includes: string;
+  filters: string;
+  sort: string;
+  fields: string;
+  appends: string;
+  page: string;
+  limit: string;
+}
+
+export interface QueryConfigOptions {
+  base_url?: string;
+  queryParameters?: QueryConfigParameters
+}
+
 export default class Query {
-  constructor(options = {}) {
+  public include: string[];
+  public model: string | null;
+  private base_url: string | null;
+  public queryParameters: QueryConfigParameters;
+  public append: string[];
+  public sorts: string[];
+  public fields: string | Record<string, string>;
+  public filters: Record<string, any>;
+  public pageValue: number | null;
+  public limitValue: number | null;
+  public paramsObj: Record<string, any> | null;
+  private parser: Parser;
+
+  constructor(options: Partial<QueryConfigOptions> = {}) {
     // @TODO validate options is an object
     // if (options && typeof(options) !== Object) {
     //   throw new Error('Please pass in an options object to the constructor.');
@@ -12,10 +40,10 @@ export default class Query {
     this.model = null;
 
     // will use base_url if passed in
-    this.base_url = options.base_url || null;
+    this.base_url = options.base_url ?? null;
 
     // default filter names
-    this.queryParameters = options.queryParameters || {
+    const defaultFilterNames = {
       filters: 'filter',
       fields: 'fields',
       includes: 'include',
@@ -25,7 +53,12 @@ export default class Query {
       sort: 'sort'
     };
 
-    // initialise variables to hold 
+    this.queryParameters = options.queryParameters ? {
+      ...defaultFilterNames,
+      ...options.queryParameters
+    } : defaultFilterNames;
+
+    // initialise variables to hold
     // the urls data
     this.include = [];
     this.append = [];
@@ -39,33 +72,41 @@ export default class Query {
     this.parser = new Parser(this);
   }
 
-  // set the model for the query
-  for(model) {
+  /**
+   * Set the model for the query
+   *
+   * @param {string} model
+   */
+  public for(model: string): Query {
     this.model = model;
 
     return this;
   }
 
-  // return the parsed url
-  get() {
+  /**
+   * Return the parsed url
+   */
+  public get(): string {
     // generate the url
     const url = this.base_url ? this.base_url + this.parseQuery() : this.parseQuery();
+
     // reset the url so the query object can be re-used
     this.reset();
+
     return url;
   }
 
-  url() {
+  public url(): string {
     return this.get();
   }
 
-  reset() {
+  private reset(): void {
     // reset the uri
     this.parser.uri = '';
   }
 
-  parseQuery() {
-    if (!this.model) {
+  private parseQuery(): string {
+    if (! this.model) {
       throw new Error('Please call the for() method before adding filters or calling url() / get().');
     }
 
@@ -75,8 +116,8 @@ export default class Query {
   /**
    * Query builder
    */
-  includes(...include) {
-    if (!include.length) {
+  public includes(...include: string[]): Query {
+    if (! include.length) {
       throw new Error(`The ${this.queryParameters.includes}s() function takes at least one argument.`);
     }
 
@@ -85,7 +126,7 @@ export default class Query {
     return this;
   }
 
-  appends(...append) {
+  public appends(...append: string[]): Query {
     if (!append.length) {
       throw new Error(`The ${this.queryParameters.appends}s() function takes at least one argument.`);
     }
@@ -95,31 +136,29 @@ export default class Query {
     return this;
   }
 
-  select(...fields) {
-    if (!fields.length) {
-      throw new Error(`The ${this.queryParameters.fields}() function takes a single argument of an array.`);
+  public select(fields: string[] | Record<string, string[]>): Query {
+    if (! fields.length) {
+      throw new Error(`The ${this.queryParameters.fields}() function takes a single argument of a valid array.`);
     }
 
     // single entity .fields(['age', 'firstname'])
-    if (fields[0].constructor === String || Array.isArray(fields[0])) {
-      this.fields = fields.join(',');
-    }
-
-    // related entities .fields({ posts: ['title', 'content'], user: ['age', 'firstname']} )
-    if (fields[0].constructor === Object) {
-      Object.entries(fields[0]).forEach(([key, value]) => {
-        this.fields[key] = value.join(',');
+    if (Array.isArray(fields)) {
+      this.fields = (fields).join(',');
+    } else {
+      // related entities .fields({ posts: ['title', 'content'], user: ['age', 'firstname']} )
+      Object.entries(fields).forEach(([key, value]) => {
+        this.fields = { ...this.fields as Record<string, string>, [key]: value.join(',') };
       });
     }
 
     return this;
   }
 
-  where(key, value) {
-    if (key === undefined || value === undefined)
+  public where(key: string, value: string): Query {
+    if (value == undefined)
       throw new Error('The where() function takes 2 arguments both of string values.');
 
-    if (Array.isArray(value) || value instanceof Object)
+    if (Array.isArray(value))
       throw new Error('The second argument to the where() function must be a string. Use whereIn() if you need to pass in an array.');
 
     this.filters[key] = value;
@@ -127,7 +166,7 @@ export default class Query {
     return this;
   }
 
-  whereIn(key, array) {
+  public whereIn(key: string, array: string[]): Query {
     if (!key || !array) {
       throw new Error('The whereIn() function takes 2 arguments of (string, array).');
     }
@@ -145,13 +184,13 @@ export default class Query {
     return this;
   }
 
-  sort(...args) {
+  public sort(...args: string[]): Query {
     this.sorts = args;
 
     return this;
   }
 
-  page(value) {
+  public page(value: number): Query {
     if (!Number.isInteger(value)) {
       throw new Error('The page() function takes a single argument of a number');
     }
@@ -161,8 +200,8 @@ export default class Query {
     return this;
   }
 
-  limit(value) {
-    if (!Number.isInteger(value)) {
+  public limit(value: number): Query {
+    if (! Number.isInteger(value)) {
       throw new Error('The limit() function takes a single argument of a number.');
     }
 
@@ -171,8 +210,8 @@ export default class Query {
     return this;
   }
 
-  params(params) {
-    if (params === undefined || params.constructor !== Object) {
+  public params(params: Record<string, any>): Query {
+    if (params.constructor !== Object) {
       throw new Error('The params() function takes a single argument of an object.');
     }
 
@@ -180,5 +219,4 @@ export default class Query {
 
     return this;
   }
-
 }
