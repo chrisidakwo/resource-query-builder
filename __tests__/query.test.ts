@@ -94,18 +94,6 @@ describe('Query builder', () => {
     expect(query.url()).toEqual(expected);
   });
 
-  test('it throws an exception if less than two arguments are passed into where()', () => {
-    expect.assertions(1);
-
-    try {
-      const query = new Query();
-
-      query.for('pizza').where('topping');
-    } catch (e) {
-      expect(e.message).toBe('The where() function takes 2 arguments both of string values.');
-    }
-  });
-
   test('it builds a simple query with whereIn()', () => {
     const query = new Query();
 

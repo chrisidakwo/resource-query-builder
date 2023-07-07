@@ -1,15 +1,11 @@
 {
   "name": "resource-query-builder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple and elegant way to build urls for your REST API",
   "scripts": {
     "build": "babel src --out-dir lib --extensions '.ts'",
     "tsc": "tsc",
     "test": "jest"
-  },
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
   },
   "repository": {
     "type": "git",
@@ -30,8 +26,14 @@
   ],
   "authors": [
     {
+      "name": "Joel Male",
+      "github": "https://github.com/joelwmale"
+    }
+  ],
+  "contributors": [
+    {
       "name": "Chris Idakwo",
-      "email": "chris.idakwo@gmail.com"
+      "github": "https://github.com/chrisidakwo"
     }
   ],
   "license": "MIT",
@@ -51,6 +53,7 @@
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-typescript": "^7.21.4",
     "@babel/runtime": "^7.3.1",
+    "@types/jest": "^29.5.2",
     "@types/qs": "^6.9.7",
     "eslint": "^8.44.0",
     "eslint-config-airbnb": "^19.0.4",
