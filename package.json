@@ -26,14 +26,12 @@
   ],
   "authors": [
     {
-      "name": "Joel Male",
-      "github": "https://github.com/joelwmale"
-    }
-  ],
-  "contributors": [
-    {
       "name": "Chris Idakwo",
       "github": "https://github.com/chrisidakwo"
+    },
+    {
+      "name": "Joel Male",
+      "github": "https://github.com/joelwmale"
     }
   ],
   "license": "MIT",
