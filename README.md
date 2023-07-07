@@ -66,6 +66,24 @@ const url = query.for('users').where('name', 'Bob').url(); // or .get();
 
 # Available Methods
 
+## for()
+
+You can optionally set the `model` on the query object using the `for()` method. It is not required:
+
+```js
+import Query from 'resource-query-builder';
+
+const query = new Query({
+  base_url: 'http://api.example.com/resource/search',
+});
+
+// http://api.example.com/resource/search?filter[name]=Bob
+const url = query.where('name', 'Bob').url(); // or .get();
+
+// http://api.example.com/resource/search/users?filter[name]=Bob
+const url = query.for('users').where('name', 'Bob').url(); // or .get();
+```
+
 ## where()
 
 ```js
