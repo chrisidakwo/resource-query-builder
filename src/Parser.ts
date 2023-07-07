@@ -80,7 +80,7 @@ export default class Parser {
     this.uri += `${this.prepend() + this.query.queryParameters.page}=${this.query.pageValue}`;
   }
 
-  private limit() {
+  private limit(): void {
     if (this.query.limitValue === null) {
       return;
     }
@@ -88,7 +88,7 @@ export default class Parser {
     this.uri += `${this.prepend() + this.query.queryParameters.limit}=${this.query.limitValue}`;
   }
 
-  private params() {
+  private params(): void {
     if (this.query.paramsObj === null) {
       return;
     }

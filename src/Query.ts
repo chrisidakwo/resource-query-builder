@@ -12,14 +12,14 @@ export interface QueryConfigParameters {
 
 export interface QueryConfigOptions {
   base_url?: string;
-  queryParameters?: QueryConfigParameters
+  queryParameters?: Partial<QueryConfigParameters>;
 }
 
 export default class Query {
   public include: string[];
   public model: string | null;
-  private base_url: string | null;
-  public queryParameters: QueryConfigParameters;
+  private base_url: string;
+  public queryParameters: Partial<QueryConfigParameters>;
   public append: string[];
   public sorts: string[];
   public fields: string | Record<string, string>;
@@ -30,17 +30,12 @@ export default class Query {
   private parser: Parser;
 
   constructor(options: Partial<QueryConfigOptions> = {}) {
-    // @TODO validate options is an object
-    // if (options && typeof(options) !== Object) {
-    //   throw new Error('Please pass in an options object to the constructor.');
-    // }
-
     // the model to execute the query against
     // set by calling .for(model)
     this.model = null;
 
     // will use base_url if passed in
-    this.base_url = options.base_url ?? null;
+    this.base_url = options.base_url ?? '';
 
     // default filter names
     const defaultFilterNames = {
@@ -55,7 +50,7 @@ export default class Query {
 
     this.queryParameters = options.queryParameters ? {
       ...defaultFilterNames,
-      ...options.queryParameters
+      ...options.queryParameters,
     } : defaultFilterNames;
 
     // initialise variables to hold
@@ -88,7 +83,7 @@ export default class Query {
    */
   public get(): string {
     // generate the url
-    const url = this.base_url ? this.base_url + this.parseQuery() : this.parseQuery();
+    const url = this.base_url + this.parseQuery();
 
     // reset the url so the query object can be re-used
     this.reset();
@@ -155,12 +150,6 @@ export default class Query {
   }
 
   public where(key: string, value: string): Query {
-    if (value == undefined)
-      throw new Error('The where() function takes 2 arguments both of string values.');
-
-    if (Array.isArray(value))
-      throw new Error('The second argument to the where() function must be a string. Use whereIn() if you need to pass in an array.');
-
     this.filters[key] = value;
 
     return this;

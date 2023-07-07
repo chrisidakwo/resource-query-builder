@@ -3,12 +3,6 @@
         "airbnb",
         "prettier"
     ],
-    "parser": "babel-eslint",
-    "parserOptions": {
-        "sourceType": "module",
-        "allowImportExportEverywhere": false,
-        "codeFrame": true
-    },
     "rules": {
         "quotes": [
             2,
