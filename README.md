@@ -74,69 +74,66 @@ You can optionally set the `model` on the query object using the `for()` method.
 import Query from 'resource-query-builder';
 
 const query = new Query({
-  base_url: 'http://api.example.com/resource/search',
+  base_url: 'http://api.example.com',
 });
 
-// http://api.example.com/resource/search?filter[name]=Bob
-const url = query.where('name', 'Bob').url(); // or .get();
-
-// http://api.example.com/resource/search/users?filter[name]=Bob
+// http://api.example.com/users
 const url = query.for('users').where('name', 'Bob').url(); // or .get();
 ```
 
 ## where()
 
 ```js
-// /users?filter[name]=Bob
+// http://api.example.com/users?filter[name]=Bob
 const url = query.for('users').where('name', 'Bob').url(); // or .get();
 ```
 
 ## whereIn()
 
 ```js
-// /users?filter[name]=bob,jerry
+// http://api.example.com/users?filter[name]=bob,jerry
 const url = query.for('users').whereIn('name', ['bob', 'jerry']).url(); // or .get();
 ```
 
 ## select()
 
 ```js
-// /users?fields=name,age,date_of_birth
+// http://api.example.com/users?fields=name,age,date_of_birth
 const url = query.for('users').select('name', 'age', 'date_of_birth').url(); // or .get();
 ```
 
 ## includes()
 
 ```js
-// /users?include=posts
+// http://api.example.com/users?include=posts
 const url = query.for('users').includes('posts').url(); // or .get();
 ```
 
 ## appends()
 
 ```js
-// /users?append=full_name,age
+// http://api.example.com/users?append=full_name,age
 const url = query.for('users').appends('full_name', 'age').url(); // or .get();
 ```
 
 ## limit()
 
 ```js
-// /users?limit=5
+// http://api.example.com/users?limit=5
 const url = query.for('users').limit(5).url(); // or .get();
 ```
 
 ## limit() | Pagination
 
 ```js
-// /users?page=2&limit=5
+// http://api.example.com/users?page=2&limit=5
 const url = query.for('users').limit(5).page(2).url(); // or .get();
 ```
 
 ## sort()
 
 ```js
-// /users?sort=-name,age
+// http://api.example.com/users?sort=-name,age
 const url = query.for('users').sort('-name', 'age').url(); // or .get();
 ```
 
@@ -145,7 +142,7 @@ const url = query.for('users').sort('-name', 'age').url(); // or .get();
 If required, you can also append your own custom parameters to the url by passing an object to the `params()` function.
 
 ```js
-// /users?format=admin
+// http://api.example.com/users?format=admin
 const url = query.for('users').params({ format: 'admin' }).url(); // or .get();
 ```
 
